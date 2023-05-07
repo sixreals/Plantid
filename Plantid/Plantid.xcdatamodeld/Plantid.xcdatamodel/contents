@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
+        <attribute name="aboriginalName" optional="YES" attributeType="String"/>
+        <attribute name="commonName" optional="YES" attributeType="String"/>
+        <attribute name="ecologicalImpact" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="3" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="heightLower" optional="YES" attributeType="Float" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="heightUpper" optional="YES" attributeType="Float" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="invasiveness" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="3" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isNative" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="scientificName" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="trait" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Trait" inverseName="relationship" inverseEntity="Trait" spotlightIndexingEnabled="YES"/>
     </entity>
-    <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
-    </elements>
+    <entity name="Trait" representedClassName="Trait" parentEntity="Item" syncable="YES" codeGenerationType="class">
+        <attribute name="traitName" optional="YES" attributeType="String"/>
+        <attribute name="traitType" optional="YES" attributeType="String"/>
+        <attribute name="traitValue" optional="YES" attributeType="String"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Item" inverseName="trait" inverseEntity="Item"/>
+    </entity>
 </model>
