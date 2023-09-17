@@ -60,6 +60,34 @@ class Plant: NSObject, NSCoding {
         self.chemOptimalTime = chemOptimalTime
     }
     
+    override init() {
+        self.botanicalName = ""
+        self.commonName = ""
+        self.indigenousLanguageName = ""
+        self.plantType = ""
+        self.plantFamily = ""
+        self.plantMorphology = ""
+        self.attributes = ""
+        self.status = ""
+        self.stemColour = ""
+        self.leafColour = ""
+        self.flowerOrganisation = ""
+        self.flowerColour = ""
+        self.floweringTime = nil
+        self.flowerDescription = ""
+        self.seedOrganisation = ""
+        self.seedColour = ""
+        self.seedTime = nil
+        self.seedDescription = ""
+        self.plantDescription = ""
+        self.userFieldNotes = ""
+        self.chemCategory = ""
+        self.resistances = ""
+        self.chemMethod = ""
+        self.chemOptimalTime = ""
+    }
+    
+    //SERIALIZATION Constructor
     required init?(coder aDecoder: NSCoder) {
             self.botanicalName = aDecoder.decodeObject(forKey: "botanicalName") as? String ?? ""
             self.commonName = aDecoder.decodeObject(forKey: "commonName") as? String ?? ""
@@ -86,7 +114,8 @@ class Plant: NSObject, NSCoding {
             self.chemMethod = aDecoder.decodeObject(forKey: "chemMethod") as? String ?? ""
             self.chemOptimalTime = aDecoder.decodeObject(forKey: "chemOptimalTime") as? String ?? ""
         }
-
+        
+    //SERIALIZATION Encoder
         func encode(with aCoder: NSCoder) {
             aCoder.encode(botanicalName, forKey: "botanicalName")
             aCoder.encode(commonName, forKey: "commonName")
