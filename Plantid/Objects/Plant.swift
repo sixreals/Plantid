@@ -6,8 +6,19 @@
 //
 
 import Foundation
+import Combine
 
-class Plant: NSObject, NSCoding {
+enum Month: String, CaseIterable, Identifiable, ExpressibleByNilLiteral {
+    init(nilLiteral: ()) {
+        self = nil
+    }
+    
+    
+    case January, February, March, Aprl, May, June, July, Augusrt, September, October, November, December
+    var id: Self { self }
+}
+
+class Plant: NSObject, NSCoding, ObservableObject {
     var botanicalName: String
     var commonName: String
     var indigenousLanguageName: String
@@ -20,7 +31,8 @@ class Plant: NSObject, NSCoding {
     var leafColour: String
     var flowerOrganisation: String
     var flowerColour: String
-    var floweringTime: DateInterval?
+    var floweringStartTime: Month
+    var floweringEndTime: Month
     var flowerDescription: String
     var seedOrganisation: String
     var seedColour: String
@@ -32,8 +44,9 @@ class Plant: NSObject, NSCoding {
     var resistances: String
     var chemMethod: String
     var chemOptimalTime: String
+    var link: String
     
-    init(botanicalName: String, commonName: String, indigenousLanguageName: String, plantType: String, plantFamily: String, plantMorphology: String, attributes: String, status: String, stemColour: String, leafColour: String, flowerOrganisation: String, flowerColour: String, floweringTime: DateInterval, flowerDescription: String, seedOrganisation: String, seedColour: String, seedTime: DateInterval, seedDescription: String, plantDescription: String, userFieldNotes: String, chemCategory: String, resistances: String, chemMethod: String, chemOptimalTime: String) {
+    init(botanicalName: String, commonName: String, indigenousLanguageName: String, plantType: String, plantFamily: String, plantMorphology: String, attributes: String, status: String, stemColour: String, leafColour: String, flowerOrganisation: String, flowerColour: String, floweringStartTime: Month, floweringEndTime: Month, flowerDescription: String, seedOrganisation: String, seedColour: String, seedTime: DateInterval, seedDescription: String, plantDescription: String, userFieldNotes: String, chemCategory: String, resistances: String, chemMethod: String, chemOptimalTime: String, link: String) {
         self.botanicalName = botanicalName
         self.commonName = commonName
         self.indigenousLanguageName = indigenousLanguageName
@@ -46,7 +59,8 @@ class Plant: NSObject, NSCoding {
         self.leafColour = leafColour
         self.flowerOrganisation = flowerOrganisation
         self.flowerColour = flowerColour
-        self.floweringTime = floweringTime
+        self.floweringStartTime = floweringStartTime
+        self.floweringEndTime = floweringEndTime
         self.flowerDescription = flowerDescription
         self.seedOrganisation = seedOrganisation
         self.seedColour = seedColour
@@ -58,6 +72,7 @@ class Plant: NSObject, NSCoding {
         self.resistances = resistances
         self.chemMethod = chemMethod
         self.chemOptimalTime = chemOptimalTime
+        self.link = link
     }
     
     override init() {
@@ -73,7 +88,8 @@ class Plant: NSObject, NSCoding {
         self.leafColour = ""
         self.flowerOrganisation = ""
         self.flowerColour = ""
-        self.floweringTime = nil
+        self.floweringStartTime = nil
+        self.floweringEndTime = nil
         self.flowerDescription = ""
         self.seedOrganisation = ""
         self.seedColour = ""
@@ -85,6 +101,36 @@ class Plant: NSObject, NSCoding {
         self.resistances = ""
         self.chemMethod = ""
         self.chemOptimalTime = ""
+        self.link = ""
+    }
+    
+    init(botanicalName: String) {
+        self.botanicalName = botanicalName
+        self.commonName = ""
+        self.indigenousLanguageName = ""
+        self.plantType = ""
+        self.plantFamily = ""
+        self.plantMorphology = ""
+        self.attributes = ""
+        self.status = ""
+        self.stemColour = ""
+        self.leafColour = ""
+        self.flowerOrganisation = ""
+        self.flowerColour = ""
+        self.floweringStartTime = nil
+        self.floweringEndTime = nil
+        self.flowerDescription = ""
+        self.seedOrganisation = ""
+        self.seedColour = ""
+        self.seedTime = nil
+        self.seedDescription = ""
+        self.plantDescription = ""
+        self.userFieldNotes = ""
+        self.chemCategory = ""
+        self.resistances = ""
+        self.chemMethod = ""
+        self.chemOptimalTime = ""
+        self.link = ""
     }
     
     //SERIALIZATION Constructor
@@ -101,7 +147,8 @@ class Plant: NSObject, NSCoding {
             self.leafColour = aDecoder.decodeObject(forKey: "leafColour") as? String ?? ""
             self.flowerOrganisation = aDecoder.decodeObject(forKey: "flowerOrganisation") as? String ?? ""
             self.flowerColour = aDecoder.decodeObject(forKey: "flowerColour") as? String ?? ""
-            self.floweringTime = aDecoder.decodeObject(forKey: "floweringTime") as? DateInterval ?? nil
+            self.floweringStartTime = aDecoder.decodeObject(forKey: "floweringStartTime") as? Month ?? nil
+            self.floweringEndTime = aDecoder.decodeObject(forKey: "floweringEndTime") as? Month ?? nil
             self.flowerDescription = aDecoder.decodeObject(forKey: "flowerDescription") as? String ?? ""
             self.seedOrganisation = aDecoder.decodeObject(forKey: "seedOrganisation") as? String ?? ""
             self.seedColour = aDecoder.decodeObject(forKey: "seedColour") as? String ?? ""
@@ -113,6 +160,7 @@ class Plant: NSObject, NSCoding {
             self.resistances = aDecoder.decodeObject(forKey: "resistances") as? String ?? ""
             self.chemMethod = aDecoder.decodeObject(forKey: "chemMethod") as? String ?? ""
             self.chemOptimalTime = aDecoder.decodeObject(forKey: "chemOptimalTime") as? String ?? ""
+            self.link = aDecoder.decodeObject(forKey: "link") as? String ?? ""
         }
         
     //SERIALIZATION Encoder
@@ -129,7 +177,8 @@ class Plant: NSObject, NSCoding {
             aCoder.encode(leafColour, forKey: "leafColour")
             aCoder.encode(flowerOrganisation, forKey: "flowerOrganisation")
             aCoder.encode(flowerColour, forKey: "flowerColour")
-            aCoder.encode(floweringTime, forKey: "floweringTime")
+            aCoder.encode(floweringStartTime, forKey: "floweringStartTime")
+            aCoder.encode(floweringEndTime, forKey: "floweringEndTime")
             aCoder.encode(flowerDescription, forKey: "flowerDescription")
             aCoder.encode(seedOrganisation, forKey: "seedOrganisation")
             aCoder.encode(seedColour, forKey: "seedColour")
@@ -141,6 +190,7 @@ class Plant: NSObject, NSCoding {
             aCoder.encode(resistances, forKey: "resistances")
             aCoder.encode(chemMethod, forKey: "chemMethod")
             aCoder.encode(chemOptimalTime, forKey: "chemOptimalTime")
+            aCoder.encode(link, forKey: "link")
         }
     }
 
