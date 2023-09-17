@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-
-struct MainMenuView: View {
+struct PlantDatabase: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     var body: some View {
@@ -20,6 +19,27 @@ struct MainMenuView: View {
                 NavigationLink("Browse All", destination :  ContentView()).environment(\.managedObjectContext, viewContext)
                 NavigationLink("ID Helper", destination :  ContentView()).environment(\.managedObjectContext, viewContext)
             }.navigationTitle("Main Menu")
+        }
+    }
+}
+
+struct MainMenuView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    var body: some View {
+        TabView {
+            ContentView()
+                .tabItem {
+                    Label("Home", systemImage: "person.crop.circle")
+                }
+            PlantDatabase()
+                .tabItem {
+                    Label("Menu", systemImage: "menucard")
+                }
+            NewView()
+                .tabItem {
+                    Label("New", systemImage: "plus")
+                }
         }
     }
 }
