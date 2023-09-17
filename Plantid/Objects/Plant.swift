@@ -8,48 +8,48 @@
 import Foundation
 import Combine
 
-enum Month: String, CaseIterable, Identifiable, ExpressibleByNilLiteral {
-    init(nilLiteral: ()) {
-        self = nil
-    }
+enum Month: String, CaseIterable, Identifiable {
     
     
-    case January, February, March, Aprl, May, June, July, Augusrt, September, October, November, December
+    case January, February, March, April, May, June, July, August, September, October, November, December, month
     var id: Self { self }
 }
 
 class Plant: NSObject, NSCoding, ObservableObject {
-    var botanicalName: String
-    var commonName: String
-    var indigenousLanguageName: String
-    var plantType: String
-    var plantFamily: String
-    var plantMorphology: String
-    var attributes: String
-    var status: String
-    var stemColour: String
-    var leafColour: String
-    var flowerOrganisation: String
-    var flowerColour: String
-    var floweringStartTime: Month
-    var floweringEndTime: Month
-    var flowerDescription: String
-    var seedOrganisation: String
-    var seedColour: String
-    var seedTime: DateInterval?
-    var seedDescription: String
-    var plantDescription: String
-    var userFieldNotes: String
-    var chemCategory: String
-    var resistances: String
-    var chemMethod: String
-    var chemOptimalTime: String
-    var link: String
+    @Published var botanicalName: String
+    @Published var commonName: String
+    @Published var indigenousLanguageName: String
+    @Published var isNative: Bool
+    @Published var plantType: String
+    @Published var plantFamily: String
+    @Published var plantMorphology: String
+    @Published var attributes: String
+    @Published var status: String
+    @Published var stemColour: String
+    @Published var leafColour: String
+    @Published var flowerOrganisation: String
+    @Published var flowerColour: String
+    @Published var floweringStartTime: Month
+    @Published var floweringEndTime: Month
+    @Published var flowerDescription: String
+    @Published var seedOrganisation: String
+    @Published var seedColour: String
+    @Published var seedTime: DateInterval?
+    @Published var seedDescription: String
+    @Published var plantDescription: String
+    @Published var userFieldNotes: String
+    @Published var chemCategory: String
+    @Published var resistances: String
+    @Published var chemMethod: String
+    @Published var chemOptimalTime: String
+    @Published var link: String
     
-    init(botanicalName: String, commonName: String, indigenousLanguageName: String, plantType: String, plantFamily: String, plantMorphology: String, attributes: String, status: String, stemColour: String, leafColour: String, flowerOrganisation: String, flowerColour: String, floweringStartTime: Month, floweringEndTime: Month, flowerDescription: String, seedOrganisation: String, seedColour: String, seedTime: DateInterval, seedDescription: String, plantDescription: String, userFieldNotes: String, chemCategory: String, resistances: String, chemMethod: String, chemOptimalTime: String, link: String) {
+    init(botanicalName: String, commonName: String, indigenousLanguageName: String, isNative: Bool, plantType: String, plantFamily: String, plantMorphology: String, attributes: String, status: String, stemColour: String, leafColour: String, flowerOrganisation: String, flowerColour: String, floweringStartTime: Month, floweringEndTime: Month, flowerDescription: String, seedOrganisation: String, seedColour: String, seedTime: DateInterval, seedDescription: String, plantDescription: String, userFieldNotes: String, chemCategory: String, resistances: String, chemMethod: String, chemOptimalTime: String, link: String) {
         self.botanicalName = botanicalName
         self.commonName = commonName
         self.indigenousLanguageName = indigenousLanguageName
+        //isNative is currently set to only true or false, doesn't include "unknown"
+        self.isNative = isNative
         self.plantType = plantType
         self.plantFamily = plantFamily
         self.plantMorphology = plantMorphology
@@ -79,6 +79,7 @@ class Plant: NSObject, NSCoding, ObservableObject {
         self.botanicalName = ""
         self.commonName = ""
         self.indigenousLanguageName = ""
+        self.isNative = false
         self.plantType = ""
         self.plantFamily = ""
         self.plantMorphology = ""
@@ -88,8 +89,8 @@ class Plant: NSObject, NSCoding, ObservableObject {
         self.leafColour = ""
         self.flowerOrganisation = ""
         self.flowerColour = ""
-        self.floweringStartTime = nil
-        self.floweringEndTime = nil
+        self.floweringStartTime = Month.month
+        self.floweringEndTime = Month.month
         self.flowerDescription = ""
         self.seedOrganisation = ""
         self.seedColour = ""
@@ -108,6 +109,7 @@ class Plant: NSObject, NSCoding, ObservableObject {
         self.botanicalName = botanicalName
         self.commonName = ""
         self.indigenousLanguageName = ""
+        self.isNative = false
         self.plantType = ""
         self.plantFamily = ""
         self.plantMorphology = ""
@@ -117,8 +119,8 @@ class Plant: NSObject, NSCoding, ObservableObject {
         self.leafColour = ""
         self.flowerOrganisation = ""
         self.flowerColour = ""
-        self.floweringStartTime = nil
-        self.floweringEndTime = nil
+        self.floweringStartTime = Month.month
+        self.floweringEndTime = Month.month
         self.flowerDescription = ""
         self.seedOrganisation = ""
         self.seedColour = ""
@@ -138,6 +140,7 @@ class Plant: NSObject, NSCoding, ObservableObject {
             self.botanicalName = aDecoder.decodeObject(forKey: "botanicalName") as? String ?? ""
             self.commonName = aDecoder.decodeObject(forKey: "commonName") as? String ?? ""
             self.indigenousLanguageName = aDecoder.decodeObject(forKey: "indigenousLanguageName") as? String ?? ""
+        self.isNative = aDecoder.decodeObject(forKey: "isNative") as? Bool ?? false
             self.plantType = aDecoder.decodeObject(forKey: "plantType") as? String ?? ""
             self.plantFamily = aDecoder.decodeObject(forKey: "plantFamily") as? String ?? ""
             self.plantMorphology = aDecoder.decodeObject(forKey: "plantMorphology") as? String ?? ""
@@ -147,8 +150,8 @@ class Plant: NSObject, NSCoding, ObservableObject {
             self.leafColour = aDecoder.decodeObject(forKey: "leafColour") as? String ?? ""
             self.flowerOrganisation = aDecoder.decodeObject(forKey: "flowerOrganisation") as? String ?? ""
             self.flowerColour = aDecoder.decodeObject(forKey: "flowerColour") as? String ?? ""
-            self.floweringStartTime = aDecoder.decodeObject(forKey: "floweringStartTime") as? Month ?? nil
-            self.floweringEndTime = aDecoder.decodeObject(forKey: "floweringEndTime") as? Month ?? nil
+        self.floweringStartTime = aDecoder.decodeObject(forKey: "floweringStartTime") as? Month ?? Month.month
+        self.floweringEndTime = aDecoder.decodeObject(forKey: "floweringEndTime") as? Month ?? Month.month
             self.flowerDescription = aDecoder.decodeObject(forKey: "flowerDescription") as? String ?? ""
             self.seedOrganisation = aDecoder.decodeObject(forKey: "seedOrganisation") as? String ?? ""
             self.seedColour = aDecoder.decodeObject(forKey: "seedColour") as? String ?? ""
@@ -168,6 +171,7 @@ class Plant: NSObject, NSCoding, ObservableObject {
             aCoder.encode(botanicalName, forKey: "botanicalName")
             aCoder.encode(commonName, forKey: "commonName")
             aCoder.encode(indigenousLanguageName, forKey: "indigenousLanguageName")
+            aCoder.encode(isNative, forKey: "isNative")
             aCoder.encode(plantType, forKey: "plantType")
             aCoder.encode(plantFamily, forKey: "plantFamily")
             aCoder.encode(plantMorphology, forKey: "plantMorphology")
